@@ -1,42 +1,31 @@
 import { useEffect, useState } from "react";
-import { words } from "../data/words";
-import { getArrayFromString } from "../helpers/getArrayFromString";
 import { LetterBox, LetterState } from "./LetterBox";
-
-const fiveLetterWordsList = words.filter((word) => word.length === 5);
 
 export const Words = ({
   letters,
-  timer,
+  word,
   onVictory,
 }: {
   letters: string[];
-  timer: { minutes: number; seconds: number };
+  word: string;
   onVictory: () => void;
 }) => {
-  const [word, setWord] = useState("");
-
-  const getNewWord = async () => {
-    let word =
-      fiveLetterWordsList[
-        Math.floor(Math.random() * fiveLetterWordsList.length)
-      ];
-    word = word.replace(/á/gi, "a");
-    word = word.replace(/é/gi, "e");
-    word = word.replace(/í/gi, "i");
-    word = word.replace(/ó/gi, "o");
-    word = word.replace(/ú/gi, "u");
-    console.log(word);
-    setWord(word);
-  };
-
   const getPossibleWord = () => {
     let possibleWord = "";
-    for (let index = 0; index < 5; index++) {
-      const letter = [...letters].splice(letters.length - 5, letters.length)[
-        index
-      ];
-      possibleWord += letter;
+
+    let lettersFragment: string[] = [];
+    if (letters.length <= 5) lettersFragment = [...letters].splice(0, 5);
+    else if (letters.length > 5 && letters.length < 10)
+      lettersFragment = [...letters].splice(5, 10);
+    else if (letters.length > 10 && letters.length < 15)
+      lettersFragment = [...letters].splice(10, 15);
+    else if (letters.length > 15 && letters.length < 20)
+      lettersFragment = [...letters].splice(15, 20);
+    else if (letters.length > 20 && letters.length < 25)
+      lettersFragment = [...letters].splice(20, 25);
+
+    for (let index = 0; index < lettersFragment.length; index++) {
+      possibleWord += lettersFragment[index] ? lettersFragment[index] : "";
     }
     return possibleWord;
   };
@@ -44,28 +33,31 @@ export const Words = ({
   const checkIfWon = () => {
     if (letters.length % 5 === 0) {
       const possibleWord = getPossibleWord();
-      if (possibleWord === word) {
-        console.log("gane");
+      if (word !== "" && possibleWord === word.toUpperCase()) {
         onVictory();
-        getNewWord();
       }
     }
   };
 
   const getLetterState = (letter: string): LetterState => {
     const possibleWord = getPossibleWord();
+
     if (letter === "") return "empty";
-    if (
-      word.includes(letter) &&
-      possibleWord.indexOf(letter) === word.indexOf(letter)
-    )
-      return "in-correct";
-    if (
-      word.includes(letter) &&
-      possibleWord.indexOf(letter) !== word.indexOf(letter)
-    )
-      return "in-wrong";
-    if (!word.includes(letter)) return "not-in";
+    else {
+      console.log(letter, word, possibleWord);
+      if (
+        word.toUpperCase().includes(letter) &&
+        possibleWord.indexOf(letter) === word.toUpperCase().indexOf(letter)
+      )
+        return "in-correct";
+      else if (
+        word.toUpperCase().includes(letter) &&
+        possibleWord.indexOf(letter) !== word.toUpperCase().indexOf(letter)
+      )
+        return "in-wrong";
+      else if (!word.toUpperCase().includes(letter)) return "not-in";
+      return "neutral";
+    }
   };
 
   const getLetterBoxes = () => {
@@ -80,20 +72,14 @@ export const Words = ({
     checkIfWon();
   }, [letters]);
 
-  useEffect(() => {
-    getNewWord();
-  }, []);
-
-  useEffect(() => {
-    if (timer.seconds === 0 && timer.minutes === 0) {
-      getNewWord();
-    }
-  }, [timer]);
-
   return (
     <div className="letterboxes mb-8">
       {getLetterBoxes().map((letter, index) => (
-        <LetterBox letter={letter} key={index} state={getLetterState(letter)} />
+        <LetterBox
+          letter={letter}
+          key={index}
+          state={getLetterState(letter).toLowerCase()}
+        />
       ))}
     </div>
   );

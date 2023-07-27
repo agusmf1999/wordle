@@ -6,6 +6,9 @@ import {
   ChartBarSquareIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/20/solid";
+import { words } from "../data/words";
+
+const fiveLetterWordsList = words.filter((word) => word.length === 5);
 
 export const Wordle = () => {
   const [showModalHowToPlay, setShowModalHowToPlay] = useState(false);
@@ -15,14 +18,32 @@ export const Wordle = () => {
   const [letters, setLetters] = useState<string[]>([]);
   const [timesPlayed, setTimesPlayed] = useState(0);
   const [victoryCount, setVictoryCount] = useState(0);
+  const [word, setWord] = useState("");
+  const [previousWord, setPreviousWord] = useState("");
+
+  const getNewWord = async () => {
+    let word =
+      fiveLetterWordsList[
+        Math.floor(Math.random() * fiveLetterWordsList.length)
+      ];
+    word = word.replace(/á/gi, "a");
+    word = word.replace(/é/gi, "e");
+    word = word.replace(/í/gi, "i");
+    word = word.replace(/ó/gi, "o");
+    word = word.replace(/ú/gi, "u");
+    console.log(word);
+    setWord(word);
+  };
 
   const getTime = () => {
     setSeconds(seconds - 1);
     if (minutes === 0 && seconds === 1) {
       setMinutes(5);
       setSeconds(0);
+      setPreviousWord(word.toUpperCase());
       setShowModalStatistics(true);
       setTimesPlayed((value) => value + 1);
+      getNewWord();
     }
     if (seconds === 0 && minutes !== 0) {
       setSeconds(59);
@@ -50,6 +71,7 @@ export const Wordle = () => {
       setShowModalHowToPlay(true);
       localStorage.setItem("alreadyVisit", "true");
     }
+    getNewWord();
   }, []);
 
   return (
@@ -66,13 +88,17 @@ export const Wordle = () => {
         <Modal
           title="Estadísticas"
           isOpen={showModalStatistics}
-          onClose={() => setShowModalStatistics(false)}
+          onClose={() => {
+            setShowModalStatistics(false);
+            setPreviousWord("");
+          }}
           closeButtonText="Aceptar"
         >
           <StatisticsModal
             timesPlayed={timesPlayed}
             victoryCount={victoryCount}
             timer={{ minutes, seconds }}
+            word={previousWord !== "" ? previousWord : undefined}
           />
         </Modal>
 
@@ -94,10 +120,13 @@ export const Wordle = () => {
       </div>
       <Words
         letters={letters}
-        timer={{ minutes, seconds }}
+        word={word}
         onVictory={() => {
           setTimesPlayed((value) => value + 1);
           setVictoryCount((value) => value + 1);
+          setShowModalStatistics(true);
+          setLetters([]);
+          getNewWord();
         }}
       />
       <Keyboard

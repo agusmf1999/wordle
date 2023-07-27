@@ -1,15 +1,17 @@
 export type LetterState =
+  | string
   | "neutral"
   | "in-correct"
   | "not-in"
   | "in-wrong"
   | "empty";
+
 export const LetterBox = ({
   letter,
   state = "neutral",
 }: {
   letter: string;
-  state?: LetterState;
+  state: LetterState;
 }) => {
   const getBackgroundColor = (state: string) => {
     switch (state) {
@@ -30,7 +32,7 @@ export const LetterBox = ({
   return (
     <div
       className={
-        "m-1 rounded-md text-4xl font-bold flex items-center justify-center w-20 h-20 " +
+        "m-1 rounded-md text-4xl font-bold flex items-center justify-center w-20 h-20 dark:text-white " +
         getBackgroundColor(state)
       }
     >
