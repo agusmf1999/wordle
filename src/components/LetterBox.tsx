@@ -1,5 +1,4 @@
 export type LetterState =
-  | string
   | "neutral"
   | "in-correct"
   | "not-in"
