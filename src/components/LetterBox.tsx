@@ -24,7 +24,7 @@ export const LetterBox = ({
   return (
     <div
       className={
-        "m-1 rounded-2xl text-4xl font-bold flex items-center justify-center w-20 h-20 " +
+        "m-1 rounded-md text-4xl font-bold flex items-center justify-center w-20 h-20 " +
         getBackgroundColor(state)
       }
     >

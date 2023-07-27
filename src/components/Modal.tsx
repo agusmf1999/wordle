@@ -1,4 +1,4 @@
-import { Fragment, PropsWithChildren } from "react";
+import { Fragment, PropsWithChildren, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "./Button";
 
@@ -44,7 +44,7 @@ export const Modal = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-2/5 transform overflow-hidden rounded-2xl bg-light-grey border p-6 text-left align-middle shadow-xl transition-all flex items-center flex-col">
+              <Dialog.Panel className="w-2/5 transform overflow-hidden rounded-2xl bg-light-grey dark:bg-dark-blue dark:text-white border p-6 text-left align-middle shadow-xl transition-all flex items-center flex-col">
                 <Dialog.Title
                   as="h3"
                   className="font-semibold text-4xl text-center p-5"
@@ -53,7 +53,10 @@ export const Modal = ({
                 </Dialog.Title>
 
                 {props.children}
-                <Button className="text-3xl w-1/2" onClick={onClose}>
+                <Button
+                  className="text-3xl w-1/2 border-0 hover:bg-green/70"
+                  onClick={onClose}
+                >
                   {closeButtonText}
                 </Button>
               </Dialog.Panel>

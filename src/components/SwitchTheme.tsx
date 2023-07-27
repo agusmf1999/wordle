@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 
 export const SwitchTheme = () => {
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.className = darkThemeEnabled ? "dark" : "";
+  }, [darkThemeEnabled]);
+
   return (
     <Switch
       checked={darkThemeEnabled}
