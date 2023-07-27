@@ -6,3 +6,9 @@ html.dark{
     background-color: #262B3C;
 }
 
+.letterboxes{
+    display:grid;
+    grid-template-columns: auto auto auto auto auto;
+    justify-items: center;
+    justify-content: center;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { HowToPlayModal, StatisticsModal } from "./";
-import { Keyboard, SwitchTheme, Modal } from "../components";
+import { Keyboard, SwitchTheme, Modal, Words } from "../components";
 import {
   ChartBarSquareIcon,
   QuestionMarkCircleIcon,
@@ -12,6 +12,7 @@ export const Wordle = () => {
   const [showModalStatistics, setShowModalStatistics] = useState(false);
   const [minutes, setMinutes] = useState(5);
   const [seconds, setSeconds] = useState(0);
+  const [letters, setLetters] = useState<string[]>([]);
   const [timesPlayed, setTimesPlayed] = useState(0);
   const [victoryCount, setVictoryCount] = useState(0);
 
@@ -20,12 +21,23 @@ export const Wordle = () => {
     if (minutes === 0 && seconds === 1) {
       setMinutes(5);
       setSeconds(0);
+      setShowModalStatistics(true);
+      setTimesPlayed((value) => value + 1);
     }
     if (seconds === 0 && minutes !== 0) {
       setSeconds(59);
       setMinutes(minutes - 1);
     }
   };
+
+  useEffect(() => {
+    if (letters.length === 25) {
+      setShowModalStatistics(true);
+      setTimesPlayed((value) => value + 1);
+      setLetters([]);
+    }
+    console.log(letters);
+  }, [letters]);
 
   useEffect(() => {
     const interval = setInterval(() => getTime(), 1000);
@@ -80,7 +92,19 @@ export const Wordle = () => {
           <SwitchTheme />
         </div>
       </div>
-      <Keyboard />
+      <Words
+        letters={letters}
+        timer={{ minutes, seconds }}
+        onVictory={() => {
+          setTimesPlayed((value) => value + 1);
+          setVictoryCount((value) => value + 1);
+        }}
+      />
+      <Keyboard
+        onType={(letter) => {
+          if (letters.length < 25) setLetters([...letters, letter]);
+        }}
+      />
     </div>
   );
 };

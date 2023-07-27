@@ -1,9 +1,15 @@
+export type LetterState =
+  | "neutral"
+  | "in-correct"
+  | "not-in"
+  | "in-wrong"
+  | "empty";
 export const LetterBox = ({
   letter,
   state = "neutral",
 }: {
   letter: string;
-  state?: "neutral" | "in-correct" | "not-in" | "in-wrong" | "empty";
+  state?: LetterState;
 }) => {
   const getBackgroundColor = (state: string) => {
     switch (state) {
@@ -16,7 +22,7 @@ export const LetterBox = ({
       case "in-wrong":
         return "bg-yellow";
       case "empty":
-        return "bg-grey";
+        return "bg-grey dark:bg-card-bg-grey";
       default:
         return "bg-light-grey";
     }
