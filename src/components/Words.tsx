@@ -44,7 +44,6 @@ export const Words = ({
 
     if (letter === "") return "empty";
     else {
-      console.log(letter, word, possibleWord);
       if (
         word.toUpperCase().includes(letter) &&
         possibleWord.indexOf(letter) === word.toUpperCase().indexOf(letter)

@@ -31,7 +31,6 @@ export const Wordle = () => {
     word = word.replace(/í/gi, "i");
     word = word.replace(/ó/gi, "o");
     word = word.replace(/ú/gi, "u");
-    console.log(word);
     setWord(word);
   };
 
@@ -57,7 +56,6 @@ export const Wordle = () => {
       setTimesPlayed((value) => value + 1);
       setLetters([]);
     }
-    console.log(letters);
   }, [letters]);
 
   useEffect(() => {
