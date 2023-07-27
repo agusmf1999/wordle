@@ -75,11 +75,7 @@ export const Words = ({
   return (
     <div className="letterboxes mb-8">
       {getLetterBoxes().map((letter, index) => (
-        <LetterBox
-          letter={letter}
-          key={index}
-          state={getLetterState(letter).toLowerCase()}
-        />
+        <LetterBox letter={letter} key={index} state={getLetterState(letter)} />
       ))}
     </div>
   );
